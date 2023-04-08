@@ -10,7 +10,7 @@ const createUser = async (req, res) => {
     if (err.name === "ValidationError") {
       console.error(err);
       return res.status(Codes.Bad_Request).send({
-        message: err.message,
+        message: "Указаны некорректные данные",
       });
     }
     console.error(err);

@@ -15,6 +15,13 @@ mongoose.connect("mongodb://localhost:27017/mestodb");
 //     useFindAndModify: false
 // });
 
+app.use((req, res, next) => {
+  req.user = {
+    _id: "643152c448af5508f72f1a3d",
+  };
+  next();
+});
+
 app.listen(PORT, () => {
   console.log(
     `The application listens on the port from which the server is started: http://localhost:${PORT}`
