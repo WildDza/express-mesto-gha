@@ -68,15 +68,15 @@ const getUser = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) {
       return res
-        .status(Codes.Bad_Request)
-        .send({ message: "id пользователя некорректный" });
+        .status(Codes.Not_Found)
+        .send({ message: `Пользователь с id: ${req.params.userId} не найден` });
     }
     return res.json(user);
   } catch (err) {
     if (err.name === "CastError") {
       console.error(err);
-      return res.status(Codes.Not_Found).send({
-        message: `Пользователь с id: ${req.params.userId} не найден`,
+      return res.status(Codes.Bad_Request).send({
+        message: "id пользователя некорректный",
       });
     }
     console.error(err);
