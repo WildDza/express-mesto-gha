@@ -31,15 +31,15 @@ const deleteCard = async (req, res) => {
         .send({ message: `Карточка с id: ${cardId} удалена` });
     } else {
       return res
-        .status(Codes.Not_Found)
-        .send({ message: `Карточка с id: ${cardId} не найдена` });
+        .status(Codes.Bad_Request)
+        .send({ message: "id карточки некорректный" });
     }
   } catch (err) {
     if (err.name === "CastError") {
       console.error(err);
       return res
-        .status(Codes.Bad_Request)
-        .send({ message: "id карточки некорректный" });
+        .status(Codes.Not_Found)
+        .send({ message: `Карточка с id: ${cardId} не найдена` });
     }
     console.error(err);
     return res
@@ -58,16 +58,16 @@ const likeCard = async (req, res) => {
     );
     if (!card) {
       return res
-        .status(Codes.Not_Found)
-        .send({ message: `Карточка с id: ${cardId} не найдена` });
+        .status(Codes.Bad_Request)
+        .send({ message: "id карточки некорректный" });
     }
     return res.send({ likes: card.likes, message: "Лайк установлен" });
   } catch (err) {
     if (err.name === "CastError") {
       console.error(err);
       return res
-        .status(Codes.Bad_Request)
-        .send({ message: "id карточки некорректный" });
+        .status(Codes.Not_Found)
+        .send({ message: `Карточка с id: ${req.params.cardId} не найдена` });
     }
     console.error(err);
     return res
@@ -86,16 +86,16 @@ const dislikeCard = async (req, res) => {
     );
     if (!card) {
       return res
-        .status(Codes.Not_Found)
-        .send({ message: `Карточка с id: ${cardId} не найдена` });
+        .status(Codes.Bad_Request)
+        .send({ message: "id карточки некорректный" });
     }
     return res.send({ likes: card.likes, message: "Лайк удален" });
   } catch (err) {
     if (err.name === "CastError") {
       console.error(err);
       return res
-        .status(Codes.Bad_Request)
-        .send({ message: "id карточки некорректный" });
+        .status(Codes.Not_Found)
+        .send({ message: `Карточка с id: ${req.params.cardId} не найдена` });
     }
     console.error(err);
     return res
