@@ -12,5 +12,7 @@ module.exports = {
   rules: {
     "no-underscore-dangle": ["error", { allow: ["_id"] }],
     quotes: ["error", "double"],
+    "no-console": "off",
+    "comma-dangle": [2, "only-multiline"],
   },
 };
