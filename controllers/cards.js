@@ -26,9 +26,7 @@ const deleteCard = async (req, res) => {
   try {
     const card = await Card.findByIdAndRemove(cardId);
     if (card) {
-      return res
-        .status(Codes.OK)
-        .send({ message: `Карточка с id: ${cardId} удалена` });
+      return res.send({ message: `Карточка с id: ${cardId} удалена` });
     } else {
       return res
         .status(Codes.Not_Found)
