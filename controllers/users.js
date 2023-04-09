@@ -69,7 +69,7 @@ const getUser = async (req, res) => {
     if (!user) {
       return res
         .status(Codes.Not_Found)
-        .send({ message: `Пользователь с id: ${req.params.userId} не найден` });
+        .send({ message: `Пользователь с id: ${userId} не найден` });
     }
     return res.json(user);
   } catch (err) {
