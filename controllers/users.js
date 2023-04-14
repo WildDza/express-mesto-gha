@@ -1,11 +1,25 @@
+const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const Codes = require("../utils/codes");
 
 const createUser = async (req, res) => {
   try {
-    const { name, about, avatar } = req.body;
-    const user = await User.create({ name, about, avatar });
-    return res.status(Codes.Created).json(user);
+    const hash = await bcrypt.hash(req.body.password, 10);
+    const { name, about, avatar, email } = req.body;
+    const user = await User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    });
+    return res.status(Codes.Created).json({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email,
+      _id: user.id,
+    });
   } catch (err) {
     if (err.name === "ValidationError") {
       console.error(err);

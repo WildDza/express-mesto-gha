@@ -14,5 +14,6 @@ module.exports = {
     quotes: ["error", "double"],
     "no-console": "off",
     "comma-dangle": [2, "only-multiline"],
+    "object-curly-newline": "always",
   },
 };
