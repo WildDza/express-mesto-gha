@@ -46,6 +46,7 @@ app.post(
 //   };
 //   next();
 // });
+app.use(auth);
 
 app.use(routes);
 

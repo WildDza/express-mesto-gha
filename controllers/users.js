@@ -124,6 +124,19 @@ const login = async (req, res, next) => {
   }
 };
 
+const getMeData = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      next(new NotFoundErr(`Пользователь с id: ${userId} не найден`));
+    }
+    return res.status(200).send(data);
+  } catch (err) {
+    return next(err);
+  }
+};
+
 module.exports = {
   createUser,
   updateUser,
@@ -131,4 +144,5 @@ module.exports = {
   getUser,
   getUsers,
   login,
+  getMeData,
 };
