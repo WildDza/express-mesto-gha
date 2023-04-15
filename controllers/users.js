@@ -112,10 +112,38 @@ const getUsers = async (req, res) => {
   }
 };
 
+const login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email }).select("+ password");
+    if (user === null) {
+      throw new Codes.Unauthorized("Wrong email or password");
+    }
+    const matched = await bcrypt.compare(password, user.password);
+    if (!matched) {
+      throw new Codes.Unauthorized("Wrong email or password");
+    }
+
+    const token = jwt.sign({ _id: user._id }, "user-secret-key", {
+      expiresIn: "7d",
+    });
+
+    return res
+      .cookie("jwt", token, { maxAge: 3600000 * 24 * 7, httpOnly: true })
+      .send({ data });
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      return next(new Codes.Bad_Request("Transferred wrong data"));
+    }
+    return next(err);
+  }
+};
+
 module.exports = {
   createUser,
   updateUser,
   updateAvatar,
   getUser,
   getUsers,
+  login,
 };
