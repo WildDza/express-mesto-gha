@@ -40,12 +40,6 @@ app.post(
   createUser
 );
 
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: "643152c448af5508f72f1a3d",
-//   };
-//   next();
-// });
 app.use(auth);
 
 app.use(routes);
