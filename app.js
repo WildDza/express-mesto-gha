@@ -7,7 +7,7 @@ const routes = require('./routes/index');
 const { login, createUser } = require('./controllers/users');
 const serverError = require('./middlewares/serverError');
 const { urlRegExp } = require('./utils/validRegularExpressions');
-const auth = require('./middlewares/auth');
+// const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -41,8 +41,6 @@ app.post(
   }),
   createUser,
 );
-
-app.use(auth);
 
 app.use(routes);
 
