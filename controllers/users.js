@@ -1,17 +1,21 @@
-const bcrypt = require("bcrypt");
-const User = require("../models/user");
-const Codes = require("../utils/codes");
-const {
-  UnauthorizedErr,
-  ConflictErr,
-  BadRequestErr,
-  NotFoundErr,
-} = require("../utils/errors");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const Codes = require('../utils/codes');
+const { BadRequestErr } = require('../errors/BadRequestErr');
+const { UnauthorizedErr } = require('../errors/UnauthorizedErr');
+const { ConflictErr } = require('../errors/ConflictErr');
+const { NotFoundErr } = require('../errors/NotFoundErr');
 
 const createUser = async (req, res, next) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10);
-    const { name, about, avatar, email } = req.body;
+    const {
+      name,
+      about,
+      avatar,
+      email,
+    } = req.body;
     const user = await User.create({
       name,
       about,
@@ -30,12 +34,12 @@ const createUser = async (req, res, next) => {
     if (err.code === 11000) {
       return next(
         new ConflictErr(
-          "Пользователь с такой электронной почтой уже зарегистрирован"
-        )
+          'Пользователь с такой электронной почтой уже зарегистрирован',
+        ),
       );
     }
-    if (err.name === "ValidationError") {
-      return next(new BadRequestErr("Указаны некорректные данные"));
+    if (err.name === 'ValidationError') {
+      return next(new BadRequestErr('Указаны некорректные данные'));
     }
     return next(err);
   }
@@ -47,12 +51,12 @@ const updateUser = async (req, res, next) => {
     await User.findByIdAndUpdate(
       req.user._id,
       { name, about },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
     return res.json({ name, about });
   } catch (err) {
-    if (err.name === "ValidationError") {
-      return next(new BadRequestErr("Были переданы некорректные данные"));
+    if (err.name === 'ValidationError') {
+      return next(new BadRequestErr('Были переданы некорректные данные'));
     }
     return next(err);
   }
@@ -64,8 +68,8 @@ const updateAvatar = async (req, res, next) => {
     await User.findByIdAndUpdate(req.user._id, { avatar }, { new: true });
     return res.json({ avatar });
   } catch (err) {
-    if (err.name === "ValidationError") {
-      return next(new BadRequestErr("Были переданы некорректные данные"));
+    if (err.name === 'ValidationError') {
+      return next(new BadRequestErr('Были переданы некорректные данные'));
     }
     return next(err);
   }
@@ -76,16 +80,15 @@ const getUser = async (req, res, next) => {
     const { userId } = req.params;
     const user = await User.findById(userId);
     if (!user) {
-      // throw new NotFoundErr(`Пользователь с id: ${userId} не найден`)
-      next(new NotFoundErr(`Пользователь с id: ${userId} не найден`));
+      throw new NotFoundErr(`Пользователь с id: ${userId} не найден`);
     }
     return res.json(user);
   } catch (err) {
-    if (err.name === "CastError") {
-      return next(new BadRequestErr("id пользователя некорректный"));
+    if (err.name === 'CastError') {
+      return next(new BadRequestErr('id пользователя некорректный'));
     }
+    return next(err);
   }
-  return next(err);
 };
 
 const getUsers = async (req, res, next) => {
@@ -100,25 +103,27 @@ const getUsers = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email }).select("+ password");
+    const user = await User.findOne({ email }).select('+ password');
     if (!user) {
-      throw new UnauthorizedErr("Ошибка в почте или пароле");
+      throw new UnauthorizedErr('Ошибка в почте или пароле');
     }
     const matched = await bcrypt.compare(password, user.password);
     if (!matched) {
-      throw new UnauthorizedErr("Ошибка в почте или пароле");
+      throw new UnauthorizedErr('Ошибка в почте или пароле');
     }
 
-    const token = jwt.sign({ _id: user._id }, "user-secret-key", {
-      expiresIn: "7d",
+    const token = jwt.sign({ _id: user._id }, 'user-secret-key', {
+      expiresIn: '7d',
     });
 
     return res
-      .cookie("jwt", token, { maxAge: 3600000 * 24 * 7, httpOnly: true })
-      .send({ data });
+      .cookie('jwt', token, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+      }).end();
   } catch (err) {
-    if (err.name === "ValidationError") {
-      return next(new BadRequestErr("Переданы ошибочные данные"));
+    if (err.name === 'ValidationError') {
+      return next(new BadRequestErr('Переданы ошибочные данные'));
     }
     return next(err);
   }
@@ -131,7 +136,7 @@ const getMeData = async (req, res, next) => {
     if (!user) {
       next(new NotFoundErr(`Пользователь с id: ${userId} не найден`));
     }
-    return res.status(200).send(data);
+    return res.status(200).send(user);
   } catch (err) {
     return next(err);
   }

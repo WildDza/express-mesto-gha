@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const isUrl = require("validator");
+const mongoose = require('mongoose');
+const isUrl = require('validator');
 
 const cardSchema = new mongoose.Schema(
   {
@@ -15,18 +15,18 @@ const cardSchema = new mongoose.Schema(
       required: true,
       validate: {
         validator: (url) => isUrl(url),
-        message: "Проверьте корректность введенного адреса",
+        message: 'Проверьте корректность введенного адреса',
       },
     },
 
     owner: {
-      ref: "user",
+      ref: 'user',
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
 
     likes: {
-      ref: "user",
+      ref: 'user',
       type: [mongoose.Schema.Types.ObjectId],
       default: [],
     },
@@ -36,7 +36,7 @@ const cardSchema = new mongoose.Schema(
       default: Date.now,
     },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
-module.exports = mongoose.model("card", cardSchema);
+module.exports = mongoose.model('card', cardSchema);

@@ -1,13 +1,13 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
-const routes = require("./routes/index");
-const { celebrate, Joi, errors } = require("celebrate");
-const { login, createUser } = require("./controllers/users");
-const cookieParser = require("cookie-parser");
-const serverError = require("./middlewares/serverError");
-const { urlRegExp } = require("./utils/validRegularExpressions");
-const auth = require("./middlewares/auth");
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const { celebrate, Joi, errors } = require('celebrate');
+const routes = require('./routes/index');
+const { login, createUser } = require('./controllers/users');
+const serverError = require('./middlewares/serverError');
+const { urlRegExp } = require('./utils/validRegularExpressions');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 
@@ -18,18 +18,18 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.post(
-  "/signin",
+  '/signin',
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
       password: Joi.string().required(),
     }),
   }),
-  login
+  login,
 );
 
 app.post(
-  "/signup",
+  '/signup',
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
@@ -39,7 +39,7 @@ app.post(
       about: Joi.string().min(2).max(30),
     }),
   }),
-  createUser
+  createUser,
 );
 
 app.use(auth);
@@ -50,14 +50,12 @@ app.use(errors());
 
 app.use(serverError);
 
-mongoose.connect("mongodb://localhost:27017/mestodb", {
+mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 
-app.listen(PORT, (err) => {
+app.listen(PORT, (err) => (
   err
     ? console.error(err)
-    : console.log(
-        `The application listens on the port from which the server is started: http://localhost:${PORT}`
-      );
-});
+    : console.log(`The application listens on the port from which the server is started: http://localhost:${PORT}`)
+));
