@@ -38,9 +38,9 @@ const createUser = async (req, res, next) => {
         ),
       );
     }
-    if (err.name === 'ValidationError') {
-      return next(new BadRequestErr('Указаны некорректные данные'));
-    }
+    // if (err.name === 'ValidationError') {
+    //   return next(new BadRequestErr('Указаны некорректные данные'));
+    // }
     return next(err);
   }
 };
