@@ -88,7 +88,7 @@ const getUser = async (req, res, next) => {
   return next(err);
 };
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
     return res.json(users);
@@ -101,7 +101,7 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select("+ password");
-    if (user === null) {
+    if (!user) {
       throw new UnauthorizedErr("Ошибка в почте или пароле");
     }
     const matched = await bcrypt.compare(password, user.password);
