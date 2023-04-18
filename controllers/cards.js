@@ -55,7 +55,7 @@ const deleteCard = async (req, res, next) => {
   try {
     const card = await Card.findById(cardId);
     const owner = card.owner.toHexString();
-    if (!card) {
+    if (card === null) {
       throw new NotFoundErr(`Карточка с id: ${cardId} не найдена`);
     }
     if (owner !== authUser) {
