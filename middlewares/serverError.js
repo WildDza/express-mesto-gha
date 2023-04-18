@@ -1,6 +1,6 @@
 const { Codes } = require('../utils/codes');
 
-const serverError = (res, err, next) => {
+const serverError = (err, req, res, next) => {
   const { statusCode = Codes.Internal_Server_Error, message } = err;
   res.status(statusCode).send({
     message:

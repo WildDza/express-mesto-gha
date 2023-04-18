@@ -32,15 +32,11 @@ const createUser = async (req, res, next) => {
     });
   } catch (err) {
     if (err.code === 11000) {
-      return next(
-        new ConflictErr(
-          'Пользователь с такой электронной почтой уже зарегистрирован',
-        ),
-      );
+      return next(new ConflictErr('Пользователь с такой электронной почтой уже зарегистрирован'));
     }
-    // if (err.name === 'ValidationError') {
-    //   return next(new BadRequestErr('Указаны некорректные данные'));
-    // }
+    if (err.name === 'ValidationError') {
+      return next(new BadRequestErr('Указаны некорректные данные'));
+    }
     return next(err);
   }
 };
@@ -103,7 +99,7 @@ const getUsers = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email }).select('+ password');
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
       throw new UnauthorizedErr('Ошибка в почте или пароле');
     }
@@ -115,7 +111,6 @@ const login = async (req, res, next) => {
     const token = jwt.sign({ _id: user._id }, 'user-secret-key', {
       expiresIn: '7d',
     });
-
     return res
       .cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
