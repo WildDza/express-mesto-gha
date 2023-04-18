@@ -9,6 +9,8 @@ const {
   getCards,
 } = require('../controllers/cards');
 
+cardsRoutes.get('/', getCards);
+
 cardsRoutes.post(
   '/',
   celebrate({
@@ -49,7 +51,5 @@ cardsRoutes.delete(
   }),
   dislikeCard,
 );
-
-cardsRoutes.get('/', getCards);
 
 module.exports = cardsRoutes;
