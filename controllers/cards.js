@@ -4,6 +4,15 @@ const { BadRequestErr } = require('../errors/BadRequestErr');
 const { ForbiddenErr } = require('../errors/ForbiddenErr');
 const { NotFoundErr } = require('../errors/NotFoundErr');
 
+const getCards = async (req, res, next) => {
+  try {
+    const cards = await Card.find({});
+    return res.json(cards);
+  } catch (err) {
+    return next(err);
+  }
+};
+
 const createCard = async (req, res, next) => {
   try {
     const owner = req.user._id;
@@ -76,15 +85,6 @@ const dislikeCard = async (req, res, next) => {
     if (err.name === 'CastError') {
       return next(new BadRequestErr('id карточки некорректный'));
     }
-    return next(err);
-  }
-};
-
-const getCards = async (req, res, next) => {
-  try {
-    const cards = await Card.find({});
-    return res.json(cards);
-  } catch (err) {
     return next(err);
   }
 };
