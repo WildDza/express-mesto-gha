@@ -10,6 +10,7 @@ const {
 } = require('../controllers/users');
 
 usersRoutes.get('/', getUsers);
+usersRoutes.get('/me', getMeData);
 
 usersRoutes.get(
   '/:userId',
@@ -41,7 +42,5 @@ usersRoutes.patch(
   }),
   updateAvatar,
 );
-
-usersRoutes.get('/me', getMeData);
 
 module.exports = usersRoutes;
