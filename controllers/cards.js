@@ -56,7 +56,7 @@ const deleteCard = async (req, res, next) => {
     const card = await Card.findById(cardId);
     const owner = card.owner.toHexString();
     if (card === null) {
-      throw new NotFoundErr(`Карточка с id: ${cardId} не найдена`);
+      throw new BadRequestErr('id карточки некорректный');
     }
     if (owner !== authUser) {
       throw new ForbiddenErr('Удаление чужих карточек запрещено');
@@ -65,7 +65,7 @@ const deleteCard = async (req, res, next) => {
     return res.send({ message: `Карточка с id: ${cardId} удалена` });
   } catch (err) {
     if (err.name === 'CastError') {
-      return next(new BadRequestErr('id карточки некорректный'));
+      return next(new NotFoundErr(`Карточка с id: ${cardId} не найдена`));
     }
     return next(err);
   }
