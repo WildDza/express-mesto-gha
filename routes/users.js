@@ -1,6 +1,6 @@
 const usersRoutes = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const { idRegExp, urlRegExp } = require('../utils/validRegularExpressions');
+const { urlRegExp } = require('../utils/validRegularExpressions');
 const {
   updateUser,
   updateAvatar,
@@ -11,16 +11,6 @@ const {
 
 usersRoutes.get('/', getUsers);
 usersRoutes.get('/me', getMeData);
-
-usersRoutes.get(
-  '/:userId',
-  celebrate({
-    body: Joi.object().keys({
-      id: Joi.string().required().length(24).regex(idRegExp),
-    }),
-  }),
-  getUser,
-);
 
 usersRoutes.patch(
   '/me',
@@ -41,6 +31,16 @@ usersRoutes.patch(
     }),
   }),
   updateAvatar,
+);
+
+usersRoutes.get(
+  '/:userId',
+  celebrate({
+    body: Joi.object().keys({
+      id: Joi.string().required().length(24).hex(),
+    }),
+  }),
+  getUser,
 );
 
 module.exports = usersRoutes;
