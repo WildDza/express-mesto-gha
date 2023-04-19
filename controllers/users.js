@@ -115,7 +115,7 @@ const login = async (req, res, next) => {
       .cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
-      }).end();
+      }).send({ message: 'Данные хранятся в httpOnly куках' });
   } catch (err) {
     if (err.name === 'ValidationError') {
       return next(new BadRequestErr('Переданы ошибочные данные'));
