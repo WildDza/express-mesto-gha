@@ -10,26 +10,18 @@ const { NotFoundErr } = require('../errors/NotFoundErr');
 const createUser = async (req, res, next) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 10);
-    const {
-      name,
-      about,
-      avatar,
-      email,
-    } = req.body;
-    const user = await User.create({
-      name,
-      about,
-      avatar,
-      email,
+    const user = {
+      name: req.body.name,
+      about: req.body.about,
+      avatar: req.body.avatar,
+      email: req.body.email,
       password: hash,
-    });
-    return res.status(Codes.Created).send({
-      name: user.name,
-      about: user.about,
-      avatar: user.avatar,
-      email: user.email,
-      _id: user._id,
-    });
+    };
+    const result = await User.create(user);
+    result.password = undefined;
+    return res.status(Codes.Created).json(
+      result,
+    );
   } catch (err) {
     if (err.code === 11000) {
       return next(new ConflictErr('Пользователь с такой электронной почтой уже зарегистрирован'));
