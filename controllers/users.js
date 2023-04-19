@@ -28,7 +28,7 @@ const createUser = async (req, res, next) => {
       about: user.about,
       avatar: user.avatar,
       email: user.email,
-      _id: user.id,
+      _id: user._id,
     });
   } catch (err) {
     if (err.code === 11000) {
