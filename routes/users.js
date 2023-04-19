@@ -36,7 +36,7 @@ usersRoutes.patch(
 usersRoutes.get(
   '/:userId',
   celebrate({
-    body: Joi.object().keys({
+    params: Joi.object().keys({
       id: Joi.string().required().length(24).hex(),
     }),
   }),
