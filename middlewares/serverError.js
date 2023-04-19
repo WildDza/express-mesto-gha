@@ -1,10 +1,8 @@
-const { InternalServerErr } = require('../errors/InternalServerErr');
-
 const serverError = (err, req, res, next) => {
-  const { statusCode = InternalServerErr, message } = err;
+  const { statusCode = 500, message } = err;
   res.status(statusCode).send({
     message:
-      statusCode === InternalServerErr
+      statusCode === 500
         ? 'Ошибка на сервере'
         : message,
   });

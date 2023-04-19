@@ -1,6 +1,6 @@
 const cardsRoutes = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const { urlRegExp } = require('../utils/validRegularExpressions');
+const { REGEXP_URL } = require('../utils/validRegularExpressions');
 const {
   createCard,
   deleteCard,
@@ -16,7 +16,7 @@ cardsRoutes.post(
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
-      link: Joi.string().required().regex(urlRegExp),
+      link: Joi.string().required().regex(REGEXP_URL),
     }),
   }),
   createCard,
@@ -26,7 +26,7 @@ cardsRoutes.delete(
   '/:cardId',
   celebrate({
     params: Joi.object().keys({
-      cardId: Joi.string().length(24).hex(),
+      cardId: Joi.string().length(24).hex().required(),
     }),
   }),
   deleteCard,
@@ -36,7 +36,7 @@ cardsRoutes.put(
   '/:cardId/likes',
   celebrate({
     params: Joi.object().keys({
-      cardId: Joi.string().length(24).hex(),
+      cardId: Joi.string().length(24).hex().required(),
     }),
   }),
   likeCard,
@@ -46,7 +46,7 @@ cardsRoutes.delete(
   '/:cardId/likes',
   celebrate({
     params: Joi.object().keys({
-      cardId: Joi.string().length(24).hex(),
+      cardId: Joi.string().length(24).hex().required(),
     }),
   }),
   dislikeCard,

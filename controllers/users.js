@@ -23,7 +23,7 @@ const createUser = async (req, res, next) => {
       email,
       password: hash,
     });
-    return res.status(Codes.Created).json({
+    return res.status(Codes.Created).send({
       name: user.name,
       about: user.about,
       avatar: user.avatar,
@@ -47,7 +47,7 @@ const updateUser = async (req, res, next) => {
     await User.findByIdAndUpdate(
       req.user._id,
       { name, about },
-      { new: true, runValidators: true },
+      { new: true },
     );
     return res.json({ name, about });
   } catch (err) {
