@@ -6,7 +6,8 @@ const { NotFoundErr } = require('../errors/NotFoundErr');
 
 const getCards = async (req, res, next) => {
   try {
-    const cards = await Card.find({});
+    // const cards = await Card.find({});
+    const cards = await Card.find({}).populate(['owner', 'likes']);
     return res.json(cards);
   } catch (err) {
     return next(err);

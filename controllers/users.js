@@ -39,7 +39,7 @@ const updateUser = async (req, res, next) => {
     await User.findByIdAndUpdate(
       req.user._id,
       { name, about },
-      { new: true },
+      { new: true, runValidators: true },
     );
     return res.json({ name, about });
   } catch (err) {
@@ -53,7 +53,11 @@ const updateUser = async (req, res, next) => {
 const updateAvatar = async (req, res, next) => {
   try {
     const { avatar } = req.body;
-    await User.findByIdAndUpdate(req.user._id, { avatar }, { new: true });
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { avatar },
+      { new: true, runValidators: true },
+    );
     return res.json({ avatar });
   } catch (err) {
     if (err.name === 'ValidationError') {
@@ -109,9 +113,9 @@ const login = async (req, res, next) => {
         httpOnly: true,
       }).send({ message: 'Данные хранятся в httpOnly куках' });
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      return next(new BadRequestErr('Переданы ошибочные данные'));
-    }
+    // if (err.name === 'ValidationError') {
+    //   return next(new BadRequestErr('Переданы ошибочные данные'));
+    // }
     return next(err);
   }
 };
