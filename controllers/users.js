@@ -113,9 +113,6 @@ const login = async (req, res, next) => {
         httpOnly: true,
       }).send({ message: 'Данные хранятся в httpOnly куках' });
   } catch (err) {
-    // if (err.name === 'ValidationError') {
-    //   return next(new BadRequestErr('Переданы ошибочные данные'));
-    // }
     return next(err);
   }
 };
